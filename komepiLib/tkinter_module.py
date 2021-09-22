@@ -1,14 +1,12 @@
 import tkinter as tk
-from tkinter.constants import CENTER, LEFT, TOP
+from tkinter.constants import LEFT, TOP
 from tkinter import filedialog
 from tkinter import StringVar
 from tkinter import ttk
 import os
 
-INPUT_FILE = 0
-INPUT_DIR = 1
-X = 0
-Y = 1
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+from matplotlib.figure import Figure
 
 def make_input_text(frame_r, label_text, text_width, initial = None, side_=TOP, side_label = LEFT):
     """テキストの入力ボックスを作成
@@ -18,7 +16,7 @@ def make_input_text(frame_r, label_text, text_width, initial = None, side_=TOP, 
         label_text (str): ラベル
         text_width (int): 入力欄の幅
         initial (str, optional): 初期値. Defaults to None.
-        side_ (tk.constants, optional): テキストボックス群の配置. Defaults to CENTER.
+        side_ (tk.constants, optional): テキストボックス群の配置. Defaults to TOP.
         side_label (tk.contains, optional): ラベルとテキストボックスの位置関係. Defaults to LEFT.
     Returns:
         tkinter.entry: テキストボックス
@@ -34,20 +32,22 @@ def make_input_text(frame_r, label_text, text_width, initial = None, side_=TOP, 
     text.pack(side=side_label)
     return text
 
-def make_input_path(frame_r, file_or_dir, label_text,width_input, initial = None):
+def make_input_path(frame_r,  label_text, width_input, file_or_dir="file", initial = None,side_ = TOP):
     """ファイル（ディレクトリ）選択ボックスの配置
 
     Args:
         frame_r (tkinter.Frame): 配置するフレーム
-        file_or_dir (int): INPUT_FILE:ファイル, INPUT_DIR:ディレクトリ
         label_text (str): ラベル
         width_input (int): 入力欄の幅
+        file_or_dir (str): "file" or "dir". Defaults to "file"
         initial (str, optional): 初期値. Defaults to None.
+        side_ (tk.constants, optional): テキストボックス群の配置. Default to TOP.
 
     Returns:
         tkinter.Entry: パスの入力欄
     """
     frame = tk.Frame(frame_r)
+    frame.pack(side=side_)
     label = tk.Label(frame, text = label_text)
     label.pack(side=LEFT)
     entry = StringVar()
@@ -55,19 +55,19 @@ def make_input_path(frame_r, file_or_dir, label_text,width_input, initial = None
     if initial != None:
         IFileEntry.insert(tk.END, initial)
     IFileEntry.pack(side=LEFT)
-    if file_or_dir == INPUT_FILE:
+    if file_or_dir == "file":
         IFileButton = ttk.Button(frame, text="参照", command=lambda:filedialog_clicked(entry))
-    elif file_or_dir == INPUT_DIR:
+    elif file_or_dir == "dir":
         IFileButton = ttk.Button(frame, text="参照", command=lambda:dirdialog_clicked(entry))
     IFileButton.pack(side=LEFT)
     return entry
 
-def create_new_window(size, title, resize=None, icon_file = None):
+def create_new_window(size, title="window", resize=None, icon_file = None):
     """新規ウィンドウの作成
 
     Args:
         size (str): サイズ. "[width]x[height]"で入力
-        title (str): ウィンドウタイトル
+        title (str): ウィンドウタイトル. Defaults to "window".
         resize (taple): ウィンドウのサイズ変更の可否。タプル型でTrue or Falseで設定(width, height). Defaults to None.
         icon_file (str): ウィンドウのアイコンファイルのパス. Defaults to None.
 
@@ -84,20 +84,20 @@ def create_new_window(size, title, resize=None, icon_file = None):
             win.iconphoto(False, tk.PhotoImage(file = icon_file))
     return win
 
-def make_scroll(frame_r, widget, vector = Y, is_canvas = False,region = None):
+def make_scroll(frame_r, widget, vector = "Y", is_canvas = False,region = None):
     """スクロールの作成
 
     Args:
         frame_r (tk.Frame): 配置フレーム
         widget (widget): 対象ウィジェット
-        vector (int, optional): スクロール方向.y方向:Y, x方向:X. Defaults to Y.
+        vector (int, optional): スクロール方向.y方向:"Y", x方向:"X". Defaults to "Y".
         is_canvas (bool, optional): canvasに配置するかどうか. Defaults to False.
         region (list), optional): canvasに配置する場合、スクロールサイズ. Defaults to None.
     """
-    if vector == X:
+    if vector == "X":
         scroll = tk.Scrollbar(frame_r,orient=tk.HORIZONTAL,command = widget.xview)
         widget.config(xscrollcommand = scroll.set)
-    elif vector == Y:
+    elif vector == "Y":
         scroll = tk.Scrollbar(frame_r,orient=tk.VERTICAL,command = widget.yview)
         widget.config(yscrollcommand = scroll.set)
     if is_canvas:
@@ -205,6 +205,54 @@ def make_button(frame_r, text_, command_,width_ = 20,side_ = TOP):
     frame.pack(side=side_)
     button = tk.Button(frame, text=text_,width = width_,command=command_)
     button.pack()
+
+def graph_plt(data, graph_type="bar",title_ = "plot graph", is_grid = False, rotate_xlim = None, showbar_=60):
+    """データをプロットしたウィンドウを表示する。グラフ、スクロールバー、ボタンが配置され、スクロールバーを動かしてグラフのプロット範囲を変更する。ボタンを押下するとウィンドウが閉じる。
+
+    Args:
+        data (dict): キーにx軸、値にy軸の値を持つ辞書型
+        graph_type (str, optional): グラフのタイプ。bar:棒グラフ, line:折れ線グラフ. Defaults to "bar".
+        title_ (str, optional): ウィンドウのタイトル. Default to "plot graph".
+        is_grid (bool, optional): グリッドを表示するか. Defaults to False.
+        rotate_xlim (int, optional): x軸ラベルの角度. Defaults to None.
+        showbar_ (int, optional): グラフの拡大率. Defaults to 60.
+    """
+    fig = Figure(figsize=(6,6))
+    ax = fig.add_subplot(111)
+    frame = tk.Tk()
+    frame.title(title_)
+    canvasFrame = tk.Frame(frame)
+    canvasFrame.pack(side=tk.TOP)
+
+    controlFrame = tk.Frame(frame)
+    controlFrame.pack(side=tk.BOTTOM)
+
+    canvas = FigureCanvasTkAgg(fig, canvasFrame)
+
+    tmp = canvas.get_tk_widget()
+    tmp.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+    showbars=showbar_
+    if graph_type == "bar":
+        ax.bar(list(data.keys()), list(data.values()))
+    elif graph_type == "line":
+        ax.plot(list(data.keys()), list(data.values()))
+    if is_grid:
+        ax.grid(linestyle="--")
+    if not rotate_xlim == None:
+        fig.autofmt_xdate(rotation = rotate_xlim)
+
+    def draw_plot(pos):
+        pos_ = float(pos)
+        ax.set_xlim(pos_-1, pos_+showbars+1)
+        canvas.draw()
+    
+    y_scale = ttk.Scale(controlFrame, from_=0.0, to=len(data)-showbars, length=480, orient=tk.HORIZONTAL, command=draw_plot)
+    y_scale.pack(fill=tk.X)
+    btn = tk.Button(controlFrame, text="閉じる", command = frame.destroy)
+    btn.pack()
+    draw_plot(0)
+
+
 # ファイル指定の関数
 def filedialog_clicked(entry):
     fTyp = [("", "*")]
@@ -217,4 +265,3 @@ def dirdialog_clicked(entry):
     iDir = os.path.abspath(os.path.dirname(__file__))
     iDirPath = filedialog.askdirectory(initialdir = iDir)
     entry.set(iDirPath)
-
