@@ -1,0 +1,220 @@
+import tkinter as tk
+from tkinter.constants import CENTER, LEFT, TOP
+from tkinter import filedialog
+from tkinter import StringVar
+from tkinter import ttk
+import os
+
+INPUT_FILE = 0
+INPUT_DIR = 1
+X = 0
+Y = 1
+
+def make_input_text(frame_r, label_text, text_width, initial = None, side_=TOP, side_label = LEFT):
+    """テキストの入力ボックスを作成
+
+    Args:
+        frame_r (tkinter.Frame): 配置するフレーム
+        label_text (str): ラベル
+        text_width (int): 入力欄の幅
+        initial (str, optional): 初期値. Defaults to None.
+        side_ (tk.constants, optional): テキストボックス群の配置. Defaults to CENTER.
+        side_label (tk.contains, optional): ラベルとテキストボックスの位置関係. Defaults to LEFT.
+    Returns:
+        tkinter.entry: テキストボックス
+    """
+    frame = tk.Frame(frame_r)
+    frame.pack(side=side_)
+    label = tk.Label(frame, text = label_text)
+    label.pack(side=LEFT)
+    text = tk.Entry(frame, width = text_width)
+    if initial != None:
+        text.insert(tk.END,initial)
+    label.pack(side=side_label)
+    text.pack(side=side_label)
+    return text
+
+def make_input_path(frame_r, file_or_dir, label_text,width_input, initial = None):
+    """ファイル（ディレクトリ）選択ボックスの配置
+
+    Args:
+        frame_r (tkinter.Frame): 配置するフレーム
+        file_or_dir (int): INPUT_FILE:ファイル, INPUT_DIR:ディレクトリ
+        label_text (str): ラベル
+        width_input (int): 入力欄の幅
+        initial (str, optional): 初期値. Defaults to None.
+
+    Returns:
+        tkinter.Entry: パスの入力欄
+    """
+    frame = tk.Frame(frame_r)
+    label = tk.Label(frame, text = label_text)
+    label.pack(side=LEFT)
+    entry = StringVar()
+    IFileEntry = ttk.Entry(frame, textvariable=entry, width=width_input)
+    if initial != None:
+        IFileEntry.insert(tk.END, initial)
+    IFileEntry.pack(side=LEFT)
+    if file_or_dir == INPUT_FILE:
+        IFileButton = ttk.Button(frame, text="参照", command=lambda:filedialog_clicked(entry))
+    elif file_or_dir == INPUT_DIR:
+        IFileButton = ttk.Button(frame, text="参照", command=lambda:dirdialog_clicked(entry))
+    IFileButton.pack(side=LEFT)
+    return entry
+
+def create_new_window(size, title, resize=None, icon_file = None):
+    """新規ウィンドウの作成
+
+    Args:
+        size (str): サイズ. "[width]x[height]"で入力
+        title (str): ウィンドウタイトル
+        resize (taple): ウィンドウのサイズ変更の可否。タプル型でTrue or Falseで設定(width, height). Defaults to None.
+        icon_file (str): ウィンドウのアイコンファイルのパス. Defaults to None.
+
+    Returns:
+        tkinter.Tk: ウィンドウ
+    """
+    win = tk.Tk()
+    win.geometry(size)
+    win.title(title)
+    if not resize == None:
+        win.resizable(width = resize[0], height = resize[1])
+    if not icon_file == None:
+        if os.path.isfile(icon_file):
+            win.iconphoto(False, tk.PhotoImage(file = icon_file))
+    return win
+
+def make_scroll(frame_r, widget, vector = Y, is_canvas = False,region = None):
+    """スクロールの作成
+
+    Args:
+        frame_r (tk.Frame): 配置フレーム
+        widget (widget): 対象ウィジェット
+        vector (int, optional): スクロール方向.y方向:Y, x方向:X. Defaults to Y.
+        is_canvas (bool, optional): canvasに配置するかどうか. Defaults to False.
+        region (list), optional): canvasに配置する場合、スクロールサイズ. Defaults to None.
+    """
+    if vector == X:
+        scroll = tk.Scrollbar(frame_r,orient=tk.HORIZONTAL,command = widget.xview)
+        widget.config(xscrollcommand = scroll.set)
+    elif vector == Y:
+        scroll = tk.Scrollbar(frame_r,orient=tk.VERTICAL,command = widget.yview)
+        widget.config(yscrollcommand = scroll.set)
+    if is_canvas:
+        widget.config(scrollregion=region)
+    return scroll
+
+def make_progress_bar(value, max_ = 100):
+    """プログレスバーの配置
+
+    Args:
+        value (method): 返り値が値のメソッド
+        max_ (int, optional): 最大値. Defaults to 100.
+    """
+    win = create_new_window("300x100", "しばらくお待ちください")
+    pb = ttk.Progressbar(win, maximum= max_, mode = "determinate", variable = value)
+    pb.pack()
+
+def change_frame(frame):
+    """画面遷移
+
+    Args:
+        frame (tk.Frame): 表示するフレーム
+    """
+    frame.tkraise()
+
+def make_listbox(frame_r, lists, text_ = None, side_ = TOP, width_ = 30, height_ = 6):
+    """リストボックスを作成
+    listbox.curselection()で現在選択しているインデックスを取得
+    listbox.get(xx)でそのテキストを取得
+    Args:
+        frame_r (tk.Frame): 配置したフレーム
+        lists (list): 項目
+        text_ (str, optional): 何のリストか示すテキスト. Defaults to None.
+        side_ (tk.contains, optional): どこに配置するか. Defaults to TOP.
+        width_ (int, optional): 幅. Defaults to 30.
+        height_ (int, optional): 表示する項目数. Defaults to 6.
+
+    Returns:
+        tk.Listbox: 作成したリストボックス
+    """
+    var = tk.StringVar(value = lists)
+    frame = tk.Frame(frame_r)
+    frame.pack(side = side_)
+    if not text_ == None:
+        label = tk.Label(frame, text = text_)
+        label.pack()
+    listbox = tk.Listbox(frame, listvariable=var,width = width_,height = height_)
+    listbox.pack(side="left")
+    if len(lists) > height_:
+        scrollbar = ttk.Scrollbar(frame, orient = "vertical", command=listbox.yview)
+        listbox["yscrollcommand"] = scrollbar.set
+        scrollbar.pack(side="right",fill="both")
+
+    return listbox
+
+def make_table(frame_r, header, lists, widths, side_=TOP, is_scroll = False):
+    """テーブルを作成する
+
+    Args:
+        frame_r (tk.Frame): 配置したいフレーム
+        header (list): 項目名のリスト
+        lists (list): 挿入するデータのリスト。項目数が複数の場合、listsのそれぞれの要素はlistもしくはtupleとなる.
+
+        widths (list): それぞれの項目の幅
+        side_ (tk.contains, optional): どこに配置するか. Defaults to TOP.
+        is_scroll (bool, optional): スクロールは必要か. Defaults to False.
+
+    Returns:
+        tk.Treeview: テーブル
+    """
+    tree_frame = tk.Frame(frame_r)
+    tree_frame.pack(side=side_)
+    tree = ttk.Treeview(tree_frame)
+    tree["column"] = tuple([i for i in range(1, len(header)+1)])
+    tree["show"] = "heading"
+
+    for i in tree["column"]:
+        tree.column(int(i), width = widths[int(i)-1])
+    for i in range(1, len(header) + 1):
+        tree.heading(i, text=header[i-1])
+    
+    for l in lists:
+        tree.insert("", "end", values=tuple(l))
+    
+    if is_scroll:
+        vbar = make_scroll(tree_frame, tree)
+        tree.pack(side="left")
+        vbar.pack(side="left",fill=tk.Y)
+    else:
+        tree.pack()
+    
+    return tree
+
+def make_button(frame_r, text_, command_,width_ = 20,side_ = TOP):
+    """ボタンを配置
+
+    Args:
+        frame_r (tk.Frame): 配置したいフレーム
+        text_ (str): ボタンに表記するテキスト
+        command_ (command): 押されたときに呼び出される関数
+        width_ (int, optional): 幅. Defaults to 20.
+        side_ (tk.contains, optional): 配置される位置. Defaults to TOP.
+    """
+    frame = tk.Frame(frame_r)
+    frame.pack(side=side_)
+    button = tk.Button(frame, text=text_,width = width_,command=command_)
+    button.pack()
+# ファイル指定の関数
+def filedialog_clicked(entry):
+    fTyp = [("", "*")]
+    iFile = os.path.abspath(os.path.dirname(__file__))
+    iFilePath = filedialog.askopenfilename(filetype = fTyp, initialdir = iFile)
+    entry.set(iFilePath)
+
+# フォルダ指定の関数
+def dirdialog_clicked(entry):
+    iDir = os.path.abspath(os.path.dirname(__file__))
+    iDirPath = filedialog.askdirectory(initialdir = iDir)
+    entry.set(iDirPath)
+
