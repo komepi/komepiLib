@@ -238,9 +238,9 @@ def graph_plt(data, graph_type="bar",title_ = "plot graph", twin_data = None, gr
     tmp.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
     showbars=showbar_
     if graph_type == "bar":
-        ax.bar(list(data.keys()), list(data.values()))
+        ax1.bar(list(data.keys()), list(data.values()))
     elif graph_type == "line":
-        ax.plot(list(data.keys()), list(data.values()))
+        ax1.plot(list(data.keys()), list(data.values()))
     if twin_data != None:
         if graph_type2 == "bar:
             ax2.bar(list(twin_data.keys()), list(twin_data.values()))
@@ -250,7 +250,7 @@ def graph_plt(data, graph_type="bar",title_ = "plot graph", twin_data = None, gr
         handler2, label2 = ax2.get_legend_handles_labels()
         ax2.legend(handler1+handler2, label1+label2,borderaxespad=0)
     if not kind_grid == None:
-        ax.grid(axis = king_grid, linestyle="--")
+        ax1.grid(axis = king_grid, linestyle="--")
     if not range5 == None:
         xtick = [1]
         xtick.extend([i * 5 for i in range(1, ((range5 - 1)//5) + 1)])
@@ -260,7 +260,7 @@ def graph_plt(data, graph_type="bar",title_ = "plot graph", twin_data = None, gr
 
     def draw_plot(pos):
         pos_ = float(pos)
-        ax.set_xlim(pos_-1, pos_+showbars+1)
+        ax1.set_xlim(pos_-1, pos_+showbars+1)
         canvas.draw()
     
     y_scale = ttk.Scale(controlFrame, from_=0.0, to=len(data)-showbars, length=480, orient=tk.HORIZONTAL, command=draw_plot)
