@@ -206,19 +206,24 @@ def make_button(frame_r, text_, command_,width_ = 20,side_ = TOP):
     button = tk.Button(frame, text=text_,width = width_,command=command_)
     button.pack()
 
-def graph_plt(data, graph_type="bar",title_ = "plot graph", is_grid = False, rotate_xlim = None, showbar_=60):
+def graph_plt(data, graph_type="bar",title_ = "plot graph", twin_data = None, graph_type2 = "bar", kind_grid = None, range5 = None, rotate_xlim = None, showbar_=60):
     """データをプロットしたウィンドウを表示する。グラフ、スクロールバー、ボタンが配置され、スクロールバーを動かしてグラフのプロット範囲を変更する。ボタンを押下するとウィンドウが閉じる。
 
     Args:
         data (dict): キーにx軸、値にy軸の値を持つ辞書型
         graph_type (str, optional): グラフのタイプ。bar:棒グラフ, line:折れ線グラフ. Defaults to "bar".
         title_ (str, optional): ウィンドウのタイトル. Default to "plot graph".
-        is_grid (bool, optional): グリッドを表示するか. Defaults to False.
+        twin_data(dict) :複数のグラフを重ねる場合、dataと同じ形式で二つ目のデータを入力. Default to None.
+        graph_type2(str): 複数のグラフを重ねる場合、twin_dataをプロットするグラフの種類. Default to "bar".
+        kind_grid (bool, optional): 表示するグリッドの種類("x" or "y"). Defaults to False.
+        range5(int) :x軸を5刻みにするとき、表示する範囲. Default to None.
         rotate_xlim (int, optional): x軸ラベルの角度. Defaults to None.
         showbar_ (int, optional): グラフの拡大率. Defaults to 60.
     """
     fig = Figure(figsize=(6,6))
-    ax = fig.add_subplot(111)
+    ax1 = fig.add_subplot(111)
+    if twin_data != None:
+        ax2 = ax1.twinx()
     frame = tk.Tk()
     frame.title(title_)
     canvasFrame = tk.Frame(frame)
@@ -236,8 +241,20 @@ def graph_plt(data, graph_type="bar",title_ = "plot graph", is_grid = False, rot
         ax.bar(list(data.keys()), list(data.values()))
     elif graph_type == "line":
         ax.plot(list(data.keys()), list(data.values()))
-    if is_grid:
-        ax.grid(linestyle="--")
+    if twin_data != None:
+        if graph_type2 == "bar:
+            ax2.bar(list(twin_data.keys()), list(twin_data.values()))
+        elif graph_type2 == "line":
+            ax2.plot(list(twin_data.keys()), list(twin_data.values()))
+        handler1, label1 = ax1.get_legent_handles_labels()
+        handler2, label2 = ax2.get_legend_handles_labels()
+        ax2.legend(handler1+handler2, label1+label2,borderaxespad=0)
+    if not kind_grid == None:
+        ax.grid(axis = king_grid, linestyle="--")
+    if not range5 == None:
+        xtick = [1]
+        xtick.extend([i * 5 for i in range(1, ((range5 - 1)//5) + 1)])
+        ax1.set_xticks(xtick)
     if not rotate_xlim == None:
         fig.autofmt_xdate(rotation = rotate_xlim)
 
