@@ -172,7 +172,7 @@ def make_table(frame_r, header, lists, widths, side_=TOP, is_scroll = False):
     tree_frame.pack(side=side_)
     tree = ttk.Treeview(tree_frame)
     tree["column"] = tuple([i for i in range(1, len(header)+1)])
-    tree["show"] = "heading"
+    tree["show"] = "headings"
 
     for i in tree["column"]:
         tree.column(int(i), width = widths[int(i)-1])
