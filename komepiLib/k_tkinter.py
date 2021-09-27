@@ -222,8 +222,6 @@ def graph_plt(data, graph_type="bar",title_ = "plot graph", twin_data = None, gr
     """
     fig = Figure(figsize=(6,6))
     ax1 = fig.add_subplot(111)
-    if twin_data != None:
-        ax2 = ax1.twinx()
     frame = tk.Tk()
     frame.title(title_)
     canvasFrame = tk.Frame(frame)
@@ -241,14 +239,6 @@ def graph_plt(data, graph_type="bar",title_ = "plot graph", twin_data = None, gr
         ax1.bar(list(data.keys()), list(data.values()))
     elif graph_type == "line":
         ax1.plot(list(data.keys()), list(data.values()))
-    if twin_data != None:
-        if graph_type2 == "bar":
-            ax2.bar(list(twin_data.keys()), list(twin_data.values()))
-        elif graph_type2 == "line":
-            ax2.plot(list(twin_data.keys()), list(twin_data.values()))
-        handler1, label1 = ax1.get_legent_handles_labels()
-        handler2, label2 = ax2.get_legend_handles_labels()
-        ax2.legend(handler1+handler2, label1+label2,borderaxespad=0)
     if not kind_grid == None:
         ax1.grid(axis = king_grid, linestyle="--")
     if not range5 == None:
