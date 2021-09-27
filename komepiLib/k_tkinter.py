@@ -242,7 +242,7 @@ def graph_plt(data, graph_type="bar",title_ = "plot graph", twin_data = None, gr
     elif graph_type == "line":
         ax1.plot(list(data.keys()), list(data.values()))
     if twin_data != None:
-        if graph_type2 == "bar:
+        if graph_type2 == "bar":
             ax2.bar(list(twin_data.keys()), list(twin_data.values()))
         elif graph_type2 == "line":
             ax2.plot(list(twin_data.keys()), list(twin_data.values()))
