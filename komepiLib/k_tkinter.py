@@ -67,10 +67,10 @@ def create_new_window(size, title="window", resize=None, icon_file = None, topLe
 
     Args:
         size (str): サイズ. "[width]x[height]"で入力
-        title (str): ウィンドウタイトル. Defaults to "window".
-        resize (taple): ウィンドウのサイズ変更の可否。タプル型でTrue or Falseで設定(width, height). Defaults to None.
-        icon_file (str): ウィンドウのアイコンファイルのパス. Defaults to None.
-        topLevel (bool): ウィンドウをメインウィンドウに連動させるか. Defaults to False.
+        title (str, optional): ウィンドウタイトル. Defaults to "window".
+        resize (taple, optional): ウィンドウのサイズ変更の可否。タプル型でTrue or Falseで設定(width, height). Defaults to None.
+        icon_file (str, optional): ウィンドウのアイコンファイルのパス. Defaults to None.
+        topLevel (bool, optional): ウィンドウをメインウィンドウに連動させるか. Defaults to False.
 
     Returns:
         tkinter.Tk: ウィンドウ
@@ -210,7 +210,7 @@ def make_button(frame_r, text_, command_,width_ = 20,side_ = TOP):
     button = tk.Button(frame, text=text_,width = width_,command=command_)
     button.pack()
 
-def graph_plt(data, graph_type="bar",title_ = "plot graph", twin_data = None, graph_type2 = "bar", kind_grid = None, range5 = None, rotate_xlim = None, showbar_=60):
+def graph_plt(data, graph_type="bar",title_ = "plot graph", twin_data = None, graph_type2 = "bar", kind_grid = None, range5 = None, rotate_xlim = None, showbar_=60, topLevel = False):
     """データをプロットしたウィンドウを表示する。グラフ、スクロールバー、ボタンが配置され、スクロールバーを動かしてグラフのプロット範囲を変更する。ボタンを押下するとウィンドウが閉じる。
 
     Args:
@@ -223,10 +223,14 @@ def graph_plt(data, graph_type="bar",title_ = "plot graph", twin_data = None, gr
         range5(int) :x軸を5刻みにするとき、表示する範囲. Default to None.
         rotate_xlim (int, optional): x軸ラベルの角度. Defaults to None.
         showbar_ (int, optional): グラフの拡大率. Defaults to 60.
+        topLevel (bool, optional): ウィンドウを連動させるか. Defaults to False.
     """
     fig = Figure(figsize=(6,6))
     ax1 = fig.add_subplot(111)
-    frame = tk.Tk()
+    if topLevel:
+        frame = tk.Toplevel()
+    else:
+        frame = tk.Tk()
     frame.title(title_)
     canvasFrame = tk.Frame(frame)
     canvasFrame.pack(side=tk.TOP)
