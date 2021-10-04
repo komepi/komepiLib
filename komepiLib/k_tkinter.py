@@ -62,7 +62,7 @@ def make_input_path(frame_r,  label_text, width_input, file_or_dir="file", initi
     IFileButton.pack(side=LEFT)
     return entry
 
-def create_new_window(size, title="window", resize=None, icon_file = None):
+def create_new_window(size, title="window", resize=None, icon_file = None, topLevel=False):
     """新規ウィンドウの作成
 
     Args:
@@ -70,11 +70,15 @@ def create_new_window(size, title="window", resize=None, icon_file = None):
         title (str): ウィンドウタイトル. Defaults to "window".
         resize (taple): ウィンドウのサイズ変更の可否。タプル型でTrue or Falseで設定(width, height). Defaults to None.
         icon_file (str): ウィンドウのアイコンファイルのパス. Defaults to None.
+        topLevel (bool): ウィンドウをメインウィンドウに連動させるか. Defaults to False.
 
     Returns:
         tkinter.Tk: ウィンドウ
     """
-    win = tk.Tk()
+    if topLevel:
+        win = tk.Toplevel()
+    else:
+        win = tk.Tk()
     win.geometry(size)
     win.title(title)
     if not resize == None:
