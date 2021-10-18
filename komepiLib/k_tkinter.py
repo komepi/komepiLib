@@ -7,7 +7,7 @@ import os
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
-#####
+#
 def make_input_text(frame_r, label_text, text_width, initial = None, side_=TOP, side_label = LEFT):
     """テキストの入力ボックスを作成
 
