@@ -210,62 +210,62 @@ def make_button(frame_r, text_, command_,width_ = 20,side_ = TOP):
     button = tk.Button(frame, text=text_,width = width_,command=command_)
     button.pack()
 
-def graph_plt(data, graph_type="bar",title_ = "plot graph", twin_data = None, graph_type2 = "bar", kind_grid = None, range5 = None, rotate_xlim = None, showbar_=60, topLevel = False):
-    """データをプロットしたウィンドウを表示する。グラフ、スクロールバー、ボタンが配置され、スクロールバーを動かしてグラフのプロット範囲を変更する。ボタンを押下するとウィンドウが閉じる。
-
-    Args:
-        data (dict): キーにx軸、値にy軸の値を持つ辞書型
-        graph_type (str, optional): グラフのタイプ。bar:棒グラフ, line:折れ線グラフ. Defaults to "bar".
-        title_ (str, optional): ウィンドウのタイトル. Default to "plot graph".
-        twin_data(dict) :複数のグラフを重ねる場合、dataと同じ形式で二つ目のデータを入力. Default to None.
-        graph_type2(str): 複数のグラフを重ねる場合、twin_dataをプロットするグラフの種類. Default to "bar".
-        kind_grid (bool, optional): 表示するグリッドの種類("x" or "y"). Defaults to False.
-        range5(int) :x軸を5刻みにするとき、表示する範囲. Default to None.
-        rotate_xlim (int, optional): x軸ラベルの角度. Defaults to None.
-        showbar_ (int, optional): グラフの拡大率. Defaults to 60.
-        topLevel (bool, optional): ウィンドウを連動させるか. Defaults to False.
-    """
-    fig = Figure(figsize=(6,6))
-    ax1 = fig.add_subplot(111)
-    if topLevel:
-        frame = tk.Toplevel()
-    else:
-        frame = tk.Tk()
-    frame.title(title_)
-    canvasFrame = tk.Frame(frame)
-    canvasFrame.pack(side=tk.TOP)
-
-    controlFrame = tk.Frame(frame)
-    controlFrame.pack(side=tk.BOTTOM)
-
-    canvas = FigureCanvasTkAgg(fig, canvasFrame)
-
-    tmp = canvas.get_tk_widget()
-    tmp.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-    showbars=showbar_
-    if graph_type == "bar":
-        ax1.bar(list(data.keys()), list(data.values()))
-    elif graph_type == "line":
-        ax1.plot(list(data.keys()), list(data.values()))
-    if not kind_grid == None:
-        ax1.grid(axis = king_grid, linestyle="--")
-    if not range5 == None:
-        xtick = [1]
-        xtick.extend([i * 5 for i in range(1, ((range5 - 1)//5) + 1)])
-        ax1.set_xticks(xtick)
-    if not rotate_xlim == None:
-        fig.autofmt_xdate(rotation = rotate_xlim)
-
-    def draw_plot(pos):
-        pos_ = float(pos)
-        ax1.set_xlim(pos_-1, pos_+showbars+1)
-        canvas.draw()
-    
-    y_scale = ttk.Scale(controlFrame, from_=0.0, to=len(data)-showbars, length=480, orient=tk.HORIZONTAL, command=draw_plot)
-    y_scale.pack(fill=tk.X)
-    btn = tk.Button(controlFrame, text="閉じる", command = frame.destroy)
-    btn.pack()
-    draw_plot(0)
+#def graph_plt(data, graph_type="bar",title_ = "plot graph", twin_data = None, graph_type2 = "bar", kind_grid = None, range5 = None, rotate_xlim = None, showbar_=60, topLevel = False):
+#    """データをプロットしたウィンドウを表示する。グラフ、スクロールバー、ボタンが配置され、スクロールバーを動かしてグラフのプロット範囲を変更する。ボタンを押下するとウィンドウが閉じる。
+#
+#    Args:
+#        data (dict): キーにx軸、値にy軸の値を持つ辞書型
+#        graph_type (str, optional): グラフのタイプ。bar:棒グラフ, line:折れ線グラフ. Defaults to "bar".
+#        title_ (str, optional): ウィンドウのタイトル. Default to "plot graph".
+#        twin_data(dict) :複数のグラフを重ねる場合、dataと同じ形式で二つ目のデータを入力. Default to None.
+#        graph_type2(str): 複数のグラフを重ねる場合、twin_dataをプロットするグラフの種類. Default to "bar".
+#        kind_grid (bool, optional): 表示するグリッドの種類("x" or "y"). Defaults to False.
+#        range5(int) :x軸を5刻みにするとき、表示する範囲. Default to None.
+#        rotate_xlim (int, optional): x軸ラベルの角度. Defaults to None.
+#        showbar_ (int, optional): グラフの拡大率. Defaults to 60.
+#        topLevel (bool, optional): ウィンドウを連動させるか. Defaults to False.
+#    """
+#    fig = Figure(figsize=(6,6))
+#    ax1 = fig.add_subplot(111)
+#    if topLevel:
+#        frame = tk.Toplevel()
+#    else:
+#        frame = tk.Tk()
+#    frame.title(title_)
+#    canvasFrame = tk.Frame(frame)
+#    canvasFrame.pack(side=tk.TOP)
+#
+#    controlFrame = tk.Frame(frame)
+#    controlFrame.pack(side=tk.BOTTOM)
+#
+#    canvas = FigureCanvasTkAgg(fig, canvasFrame)
+#
+#    tmp = canvas.get_tk_widget()
+#    tmp.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+#    showbars=showbar_
+#    if graph_type == "bar":
+#        ax1.bar(list(data.keys()), list(data.values()))
+#    elif graph_type == "line":
+#        ax1.plot(list(data.keys()), list(data.values()))
+#    if not kind_grid == None:
+#        ax1.grid(axis = kind_grid, linestyle="--")
+#    if not range5 == None:
+#        xtick = [1]
+#        xtick.extend([i * 5 for i in range(1, ((range5 - 1)//5) + 1)])
+#        ax1.set_xticks(xtick)
+#    if not rotate_xlim == None:
+#        fig.autofmt_xdate(rotation = rotate_xlim)
+#
+#    def draw_plot(pos):
+#        pos_ = float(pos)
+#        ax1.set_xlim(pos_-1, pos_+showbars+1)
+#        canvas.draw()
+#    
+#    y_scale = ttk.Scale(controlFrame, from_=0.0, to=len(data)-showbars, length=480, orient=tk.HORIZONTAL, command=draw_plot)
+#    y_scale.pack(fill=tk.X)
+#    btn = tk.Button(controlFrame, text="閉じる", command = frame.destroy)
+#    btn.pack()
+#    draw_plot(0)
 
 
 # ファイル指定の関数
