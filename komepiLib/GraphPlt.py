@@ -58,7 +58,7 @@ class GraphPlt():
     
 
     
-    def make_graph(self, x, y, graph_type,color = None,label=None):
+    def make_graph(self, x, y, graph_type,color = None,marker = None,label=None):
         """最初のグラフの作成
 
         Args:
@@ -69,10 +69,10 @@ class GraphPlt():
             label (str, optional): グラフのラベル. Defaults to None.
         """
         self.axes_set()
-        self.handler, self.label = self.graph_set(self.ax,x, y, graph_type,color,label)
+        self.handler, self.label = self.graph_set(self.ax,x, y, graph_type,color,marker,label)
     
 
-    def add_graph(self, x, y, graph_type,color = None,label=None):
+    def add_graph(self, x, y, graph_type,color = None,marker=None,label=None):
         """グラフの追加
 
         Args:
@@ -82,7 +82,7 @@ class GraphPlt():
             color (str, optional): グラフの色. Defaults to None.
             label (str, optional): グラフのラベル. Defaults to None.
         """
-        self.graph_set(self.ax,x, y, graph_type,color,label)
+        self.graph_set(self.ax,x, y, graph_type,color,marker,label)
 
     def twin_axes(self):
         """2軸グラフにする
@@ -91,7 +91,7 @@ class GraphPlt():
         self.twin_label_handle=list()
         self.twin_label_handle.append((self.handler,self.label))
 
-    def twin_add_graph(self,x,y,graph_type,color=None, label=None):
+    def twin_add_graph(self,x,y,graph_type,color=None, marker = None,label=None):
         """2軸グラフに新たなデータの追加
 
         Args:
@@ -101,7 +101,7 @@ class GraphPlt():
             color (str, optional): グラフの色. Defaults to None.
             label (str, optional): グラフのラベル. Defaults to None.
         """
-        handler, labels=self.graph_set(self.ax_t,x,y,graph_type,color,label)
+        handler, labels=self.graph_set(self.ax_t,x,y,graph_type,color,marker,label)
         self.twin_label_handle.append((handler,labels))
 
     def axes_set(self):
@@ -109,7 +109,7 @@ class GraphPlt():
         """
         self.ax = self.fig.add_subplot(111)
 
-    def graph_set(self,ax,x,y,graph_type,color,label):
+    def graph_set(self,ax,x,y,graph_type,color,marker,label):
         """グラフのセット
 
         Args:
@@ -124,7 +124,10 @@ class GraphPlt():
             [type]: [description]
         """
         g = self._graph_select(ax,graph_type)
-        g(x,y,color=color,label=label)
+        if graph_type=="line":
+            g(x,y,color=color,label=label,marker=marker)
+        else:
+            g(x,y,color=color,label=label)
         self.data_len = len(x)
         handler, label = ax.get_legend_handles_labels()
         return handler, label
