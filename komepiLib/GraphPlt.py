@@ -133,16 +133,21 @@ class GraphPlt():
         return handler, label
 
     
-    def set_span_xlim(self,last,span,first=0):
+    def set_span_xlim(self,span,last=0,first=0,delta = None):
         """x軸の設定
 
         Args:
-            last (int): 最後の数値
             span (int): 間隔
+            last (int, optional): 最後の数値. Defaults to 0.
             first (int, optional): 最初のデータ. Defaults to 0.
+            delta (int, optional): last-firstの値. Defaults to None.
         """
-        xtick = [first]
-        xtick.extend([i * span for i in range(1, (( last-first -1)//5) + 1)])
+        if delta == None:
+            xtick = [first]
+            xtick.extend([i * span for i in range(1, (( last-first -1)//span) + 1)])
+        else:
+            xtick = [1]
+            xtick.extend([i * span for i in range(1, ((delta-1)//span) + 1)])
         self.ax.set_xticks(xtick)
 
     def _graph_select(self,ax,graph_type):
