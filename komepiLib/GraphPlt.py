@@ -26,6 +26,7 @@ class GraphPlt():
             frame = tk.Toplevel()
         else:
             frame = tk.Tk()
+        frame.focus_force()
         frame.title(title)
         canvasFrame = tk.Frame(frame)
         canvasFrame.pack(side=tk.TOP)
