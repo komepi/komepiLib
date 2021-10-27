@@ -4,5 +4,5 @@ setup(
     name = "komepiLib",
     version = "0.2",
     packages=find_packages(),
-    install_requires=["selenium","matplotlib"]
+    install_requires=["matplotlib"]
 )
