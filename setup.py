@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name = "komepiLib",
+    name = "komepiTkinter",
     version = "0.2",
     packages=find_packages(),
     install_requires=["matplotlib"]
