@@ -1,2 +1,2 @@
-import komepiLib.k_tkinter
-import komepiLib.GraphPlt
+import komepiTkinter.k_tkinter
+import komepiTkinter.GraphPlt
