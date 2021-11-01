@@ -47,9 +47,11 @@ def make_input_text(frame_r, label_text, text_width, initial = None, side_=TOP, 
                 return True
             return False
         validate = frame_r.register(validate_input_header)
+        text = tk.Entry(frame, width = text_width,validate="key",validatecommand=(validate, "%P"))
+
     else:
-        validate = None
-    text = tk.Entry(frame, width = text_width,validate="key",validatecommand=(validate, "%P"))
+        text = tk.Entry(frame, width = text_width)
+
     if initial != None:
         text.insert(tk.END,initial)
     label.pack(side=side_label)
