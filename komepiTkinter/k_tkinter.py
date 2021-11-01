@@ -4,11 +4,15 @@ from tkinter import filedialog
 from tkinter import StringVar
 from tkinter import ttk
 import os
+import re
 
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 #
-def make_input_text(frame_r, label_text, text_width, initial = None, side_=TOP, side_label = LEFT):
+
+
+
+def make_input_text(frame_r, label_text, text_width, initial = None, side_=TOP, side_label = LEFT,fmt = None):
     """テキストの入力ボックスを作成
 
     Args:
@@ -18,6 +22,7 @@ def make_input_text(frame_r, label_text, text_width, initial = None, side_=TOP, 
         initial (str, optional): 初期値. Defaults to None.
         side_ (tk.constants, optional): テキストボックス群の配置. Defaults to TOP.
         side_label (tk.contains, optional): ラベルとテキストボックスの位置関係. Defaults to LEFT.
+        fmt (str): 正規表現. Default to None.
     Returns:
         tkinter.entry: テキストボックス
     """
@@ -25,7 +30,26 @@ def make_input_text(frame_r, label_text, text_width, initial = None, side_=TOP, 
     frame.pack(side=side_)
     label = tk.Label(frame, text = label_text)
     label.pack(side=LEFT)
-    text = tk.Entry(frame, width = text_width)
+    if not fmt == None:
+        def validate_input_header(val):
+            """正規表現チェック
+
+            Args:
+                val (str)): 入力値
+                fmt (str):正規表現
+
+            Returns:
+                bool: 正規表現にマッチしているか
+            """
+            if val == "":
+                return True
+            if re.fullmatch(fmt, val):
+                return True
+            return False
+        validate = frame_r.register(validate_input_header)
+    else:
+        validate = None
+    text = tk.Entry(frame, width = text_width,validate="key",validatecommand=(validate, "%P"))
     if initial != None:
         text.insert(tk.END,initial)
     label.pack(side=side_label)
