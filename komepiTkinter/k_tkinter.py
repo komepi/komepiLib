@@ -61,7 +61,17 @@ def make_input_path(frame_r,  label_text, width_input, file_or_dir="file", initi
         IFileButton = ttk.Button(frame, text="参照", command=lambda:dirdialog_clicked(entry))
     IFileButton.pack(side=LEFT)
     return entry
+def make_label(frame_r, text,side="top"):
+    """ラベルを配置
 
+    Args:
+        frame_r (tk.Frame): 配置するフレーム
+        text (str): ラベル本文
+        side (str, optional): 配置の仕方. Defaults to "top".
+    """
+    label = tk.Label(frame_r,text=text)
+    label.pack(side=side)
+    
 def create_new_window(size, title="window", resize=None, icon_file = None, topLevel=False):
     """新規ウィンドウの作成
 
