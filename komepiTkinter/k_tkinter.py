@@ -12,7 +12,7 @@ from matplotlib.figure import Figure
 
 
 
-def make_input_text(frame_r, label_text, text_width, initial = None, side_=TOP, side_label = LEFT,fmt = None):
+def input_text(frame_r, label_text, text_width, initial = None, side_=TOP, side_label = LEFT,fmt = None):
     """テキストの入力ボックスを作成
 
     Args:
@@ -58,7 +58,7 @@ def make_input_text(frame_r, label_text, text_width, initial = None, side_=TOP, 
     text.pack(side=side_label)
     return text
 
-def make_input_path(frame_r,  label_text, width_input, file_or_dir="file", initial = None,side_ = TOP):
+def input_path(frame_r,  label_text, width_input, file_or_dir="file", initial = None,side_ = TOP):
     """ファイル（ディレクトリ）選択ボックスの配置
 
     Args:
@@ -88,10 +88,10 @@ def make_input_path(frame_r,  label_text, width_input, file_or_dir="file", initi
     IFileButton.pack(side=LEFT)
     return entry
 
-def make_button(frame_r, text, side, command, **keyword):
+def button(frame_r, text, side, command, **keyword):
     ttk.Button(frame_r, text = text, command = lambda:command(**keyword)).pack(side=side)
 
-def make_label(frame_r, text,side="top"):
+def label(frame_r, text,side="top"):
     """ラベルを配置
 
     Args:
@@ -102,7 +102,7 @@ def make_label(frame_r, text,side="top"):
     label = tk.Label(frame_r,text=text)
     label.pack(side=side)
     
-def create_new_window(size, title="window", resize=None, icon_file = None, topLevel=False):
+def new_window(size, title="window", resize=None, icon_file = None, topLevel=False):
     """新規ウィンドウの作成
 
     Args:
@@ -128,7 +128,7 @@ def create_new_window(size, title="window", resize=None, icon_file = None, topLe
             win.iconphoto(False, tk.PhotoImage(file = icon_file))
     return win
 
-def make_scroll(frame_r, widget, vector = "Y", is_canvas = False,region = None):
+def scroll(frame_r, widget, vector = "Y", is_canvas = False,region = None):
     """スクロールの作成
 
     Args:
@@ -148,14 +148,14 @@ def make_scroll(frame_r, widget, vector = "Y", is_canvas = False,region = None):
         widget.config(scrollregion=region)
     return scroll
 
-def make_progress_bar(value, max_ = 100):
+def progress_bar(value, max_ = 100):
     """プログレスバーの配置
 
     Args:
         value (method): 返り値が値のメソッド
         max_ (int, optional): 最大値. Defaults to 100.
     """
-    win = create_new_window("300x100", "しばらくお待ちください")
+    win = new_window("300x100", "しばらくお待ちください")
     pb = ttk.Progressbar(win, maximum= max_, mode = "determinate", variable = value)
     pb.pack()
 
@@ -167,7 +167,7 @@ def change_frame(frame):
     """
     frame.tkraise()
 
-def make_listbox(frame_r, lists, text_ = None, side_ = TOP, width_ = 30, height_ = 6):
+def listbox(frame_r, lists, text_ = None, side_ = TOP, width_ = 30, height_ = 6):
     """リストボックスを作成
     listbox.curselection()で現在選択しているインデックスを取得
     listbox.get(xx)でそのテキストを取得
@@ -197,7 +197,7 @@ def make_listbox(frame_r, lists, text_ = None, side_ = TOP, width_ = 30, height_
 
     return listbox
 
-def make_table(frame_r, header, lists, widths, side_=TOP, is_scroll = False):
+def table(frame_r, header, lists, widths, side_=TOP, is_scroll = False):
     """テーブルを作成する
 
     Args:
@@ -227,7 +227,7 @@ def make_table(frame_r, header, lists, widths, side_=TOP, is_scroll = False):
         tree.insert("", "end", values=tuple(l))
     
     if is_scroll:
-        vbar = make_scroll(tree_frame, tree)
+        vbar = scroll(tree_frame, tree)
         tree.pack(side="left")
         vbar.pack(side="left",fill=tk.Y)
     else:
