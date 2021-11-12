@@ -87,6 +87,10 @@ def make_input_path(frame_r,  label_text, width_input, file_or_dir="file", initi
         IFileButton = ttk.Button(frame, text="参照", command=lambda:dirdialog_clicked(entry))
     IFileButton.pack(side=LEFT)
     return entry
+
+def make_button(frame_r, text, command, side = LEFT, **keyword):
+    ttk.Button(frame_r, text = text, command = lambda:command(**keyword)).pack(side=side)
+
 def make_label(frame_r, text,side="top"):
     """ラベルを配置
 
