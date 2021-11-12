@@ -235,20 +235,20 @@ def make_table(frame_r, header, lists, widths, side_=TOP, is_scroll = False):
     
     return tree
 
-def make_button(frame_r, text_, command_,width_ = 20,side_ = TOP):
-    """ボタンを配置
-
-    Args:
-        frame_r (tk.Frame): 配置したいフレーム
-        text_ (str): ボタンに表記するテキスト
-        command_ (command): 押されたときに呼び出される関数
-        width_ (int, optional): 幅. Defaults to 20.
-        side_ (tk.contains, optional): 配置される位置. Defaults to TOP.
-    """
-    frame = tk.Frame(frame_r)
-    frame.pack(side=side_)
-    button = tk.Button(frame, text=text_,width = width_,command=command_)
-    button.pack()
+#def make_button(frame_r, text_, command_,width_ = 20,side_ = TOP):
+#    """ボタンを配置
+#
+#    Args:
+#        frame_r (tk.Frame): 配置したいフレーム
+#        text_ (str): ボタンに表記するテキスト
+#        command_ (command): 押されたときに呼び出される関数
+#        width_ (int, optional): 幅. Defaults to 20.
+#        side_ (tk.contains, optional): 配置される位置. Defaults to TOP.
+#    """
+#    frame = tk.Frame(frame_r)
+#    frame.pack(side=side_)
+#    button = tk.Button(frame, text=text_,width = width_,command=command_)
+#    button.pack()
 
 #def graph_plt(data, graph_type="bar",title_ = "plot graph", twin_data = None, graph_type2 = "bar", kind_grid = None, range5 = None, rotate_xlim = None, showbar_=60, topLevel = False):
 #    """データをプロットしたウィンドウを表示する。グラフ、スクロールバー、ボタンが配置され、スクロールバーを動かしてグラフのプロット範囲を変更する。ボタンを押下するとウィンドウが閉じる。
