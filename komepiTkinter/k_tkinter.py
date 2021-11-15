@@ -256,7 +256,23 @@ def _dirdialog_clicked(entry):
 
 class TreeView():
     
-    def __init__(self,frame: tk.Frame,side,header,widths,height,is_scroll,is_headings):
+    def __init__(self,
+                 frame: tk.Frame,
+                 header: list,
+                 widths: list,
+                 height: int,
+                 is_scroll: bool,
+                 is_headings: bool):
+        """TreeViewを初期化
+
+        Args:
+            frame (tk.Frame): 配置したいフレーム
+            header (list): 項目名のリスト
+            widths (list): それぞれの項目の幅
+            height (int): 表示する行数
+            is_scroll (bool): スクロールバーの有無
+            is_headings (bool): 開くやつか否か
+        """
         self.is_headings = is_headings
         self.is_scroll = is_scroll
         tree_frame = tk.Frame(frame)
@@ -287,7 +303,17 @@ class TreeView():
         self.tree = tree
         print(tree["column"])
     
-    def insert_data(self,datas,parent = None,is_open=False):
+    def insert_data(self,datas: list or tuple, parent: str = None, is_open: bool = False):
+        """Treeviewにデータを挿入する
+
+        Args:
+            datas (list or tuple): 挿入するデータ
+            parent (str, optional): 親要素. Defaults to None.
+            is_open (bool, optional): 開くか否か. Defaults to False.
+
+        Returns:
+            str: 行の要素
+        """
         if parent == None:
             p = ""
         else:
@@ -307,7 +333,13 @@ class TreeView():
                 open=is_open
             )
         return iid
-    def plot(self,frame_side):
+    
+    def plot(self, frame_side: constants = TOP):
+        """Treeviewの配置
+
+        Args:
+            frame_side (tk.constans): 配置箇所
+        """
         self.tree_frame.pack(side=frame_side)
         if self.is_scroll:
             self.tree.pack(side="left")
