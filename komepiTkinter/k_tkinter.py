@@ -301,7 +301,6 @@ class TreeView():
         tree.pack()
         self.tree_frame = tree_frame
         self.tree = tree
-        print(tree["column"])
     
     def insert_data(self,datas: list or tuple, parent: str = None, is_open: bool = False):
         """Treeviewにデータを挿入する
