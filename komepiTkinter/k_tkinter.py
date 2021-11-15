@@ -3,6 +3,7 @@ from tkinter.constants import LEFT, TOP
 from tkinter import filedialog
 from tkinter import StringVar
 from tkinter import ttk
+from tkinter import constants
 import os
 import re
 
@@ -10,9 +11,13 @@ from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 #
 
-
-
-def input_text(frame_r, label_text, text_width, initial = None, side_=TOP, side_label = LEFT,fmt = None):
+def input_text(frame_r: tk.Frame,
+               label_text: str,
+               text_width: int,
+               initial: str = None,
+               side_: constants = TOP,
+               side_label: constants = LEFT,
+               fmt: str = None):
     """テキストの入力ボックスを作成
 
     Args:
@@ -58,7 +63,12 @@ def input_text(frame_r, label_text, text_width, initial = None, side_=TOP, side_
     text.pack(side=side_label)
     return text
 
-def input_path(frame_r,  label_text, width_input, file_or_dir="file", initial = None,side_ = TOP):
+def input_path(frame_r: tk.Frame,
+               label_text: str,
+               width_input: int,
+               file_or_dir: str = "file",
+               initial: str = None,
+               side_: constants = TOP):
     """ファイル（ディレクトリ）選択ボックスの配置
 
     Args:
@@ -82,33 +92,34 @@ def input_path(frame_r,  label_text, width_input, file_or_dir="file", initial = 
         IFileEntry.insert(tk.END, initial)
     IFileEntry.pack(side=LEFT)
     if file_or_dir == "file":
-        IFileButton = ttk.Button(frame, text="参照", command=lambda:filedialog_clicked(entry))
+        IFileButton = ttk.Button(frame, text="参照", command=lambda:_filedialog_clicked(entry))
     elif file_or_dir == "dir":
-        IFileButton = ttk.Button(frame, text="参照", command=lambda:dirdialog_clicked(entry))
+        IFileButton = ttk.Button(frame, text="参照", command=lambda:_dirdialog_clicked(entry))
     IFileButton.pack(side=LEFT)
     return entry
 
-def button(frame_r, text, side, command, **keyword):
-    ttk.Button(frame_r, text = text, command = lambda:command(**keyword)).pack(side=side)
-
-def label(frame_r, text,side="top"):
+def label(frame_r: tk.Frame, text: str, side: constants = TOP):
     """ラベルを配置
 
     Args:
         frame_r (tk.Frame): 配置するフレーム
         text (str): ラベル本文
-        side (str, optional): 配置の仕方. Defaults to "top".
+        side (tk.constants, optional): 配置の仕方. Defaults to TOP.
     """
     label = tk.Label(frame_r,text=text)
     label.pack(side=side)
     
-def new_window(size, title="window", resize=None, icon_file = None, topLevel=False):
+def new_window(size: str,
+               title: str = "window",
+               resize: tuple = None,
+               icon_file: str = None,
+               topLevel: bool = False):
     """新規ウィンドウの作成
 
     Args:
         size (str): サイズ. "[width]x[height]"で入力
         title (str, optional): ウィンドウタイトル. Defaults to "window".
-        resize (taple, optional): ウィンドウのサイズ変更の可否。タプル型でTrue or Falseで設定(width, height). Defaults to None.
+        resize (tuple, optional): ウィンドウのサイズ変更の可否。タプル型でTrue or Falseで設定(width, height). Defaults to None.
         icon_file (str, optional): ウィンドウのアイコンファイルのパス. Defaults to None.
         topLevel (bool, optional): ウィンドウをメインウィンドウに連動させるか. Defaults to False.
 
@@ -128,7 +139,7 @@ def new_window(size, title="window", resize=None, icon_file = None, topLevel=Fal
             win.iconphoto(False, tk.PhotoImage(file = icon_file))
     return win
 
-def scroll(frame_r, widget, vector = "Y", is_canvas = False,region = None):
+def scroll(frame_r: tk.Frame, widget: tk.Widget, vector: str = "Y", is_canvas: bool = False, region: list = None):
     """スクロールの作成
 
     Args:
@@ -148,17 +159,6 @@ def scroll(frame_r, widget, vector = "Y", is_canvas = False,region = None):
         widget.config(scrollregion=region)
     return scroll
 
-def progress_bar(value, max_ = 100):
-    """プログレスバーの配置
-
-    Args:
-        value (method): 返り値が値のメソッド
-        max_ (int, optional): 最大値. Defaults to 100.
-    """
-    win = new_window("300x100", "しばらくお待ちください")
-    pb = ttk.Progressbar(win, maximum= max_, mode = "determinate", variable = value)
-    pb.pack()
-
 def change_frame(frame):
     """画面遷移
 
@@ -167,7 +167,12 @@ def change_frame(frame):
     """
     frame.tkraise()
 
-def listbox(frame_r, lists, text_ = None, side_ = TOP, width_ = 30, height_ = 6):
+def listbox(frame_r: tk.Frame,
+            lists: list,
+            text: str = None,
+            side: constants = TOP,
+            width: int = 30,
+            height: int = 6):
     """リストボックスを作成
     listbox.curselection()で現在選択しているインデックスを取得
     listbox.get(xx)でそのテキストを取得
@@ -184,13 +189,13 @@ def listbox(frame_r, lists, text_ = None, side_ = TOP, width_ = 30, height_ = 6)
     """
     var = tk.StringVar(value = lists)
     frame = tk.Frame(frame_r)
-    frame.pack(side = side_)
-    if not text_ == None:
-        label = tk.Label(frame, text = text_)
+    frame.pack(side = side)
+    if not text == None:
+        label = tk.Label(frame, text = text)
         label.pack()
-    listbox = tk.Listbox(frame, listvariable=var,width = width_,height = height_)
+    listbox = tk.Listbox(frame, listvariable=var,width = width,height = height)
     listbox.pack(side="left")
-    if len(lists) > height_:
+    if len(lists) > height:
         scrollbar = ttk.Scrollbar(frame, orient = "vertical", command=listbox.yview)
         listbox["yscrollcommand"] = scrollbar.set
         scrollbar.pack(side="right",fill="both")
@@ -235,88 +240,80 @@ def table(frame_r, header, lists, widths, side_=TOP, is_scroll = False):
     
     return tree
 
-#def make_button(frame_r, text_, command_,width_ = 20,side_ = TOP):
-#    """ボタンを配置
-#
-#    Args:
-#        frame_r (tk.Frame): 配置したいフレーム
-#        text_ (str): ボタンに表記するテキスト
-#        command_ (command): 押されたときに呼び出される関数
-#        width_ (int, optional): 幅. Defaults to 20.
-#        side_ (tk.contains, optional): 配置される位置. Defaults to TOP.
-#    """
-#    frame = tk.Frame(frame_r)
-#    frame.pack(side=side_)
-#    button = tk.Button(frame, text=text_,width = width_,command=command_)
-#    button.pack()
-
-#def graph_plt(data, graph_type="bar",title_ = "plot graph", twin_data = None, graph_type2 = "bar", kind_grid = None, range5 = None, rotate_xlim = None, showbar_=60, topLevel = False):
-#    """データをプロットしたウィンドウを表示する。グラフ、スクロールバー、ボタンが配置され、スクロールバーを動かしてグラフのプロット範囲を変更する。ボタンを押下するとウィンドウが閉じる。
-#
-#    Args:
-#        data (dict): キーにx軸、値にy軸の値を持つ辞書型
-#        graph_type (str, optional): グラフのタイプ。bar:棒グラフ, line:折れ線グラフ. Defaults to "bar".
-#        title_ (str, optional): ウィンドウのタイトル. Default to "plot graph".
-#        twin_data(dict) :複数のグラフを重ねる場合、dataと同じ形式で二つ目のデータを入力. Default to None.
-#        graph_type2(str): 複数のグラフを重ねる場合、twin_dataをプロットするグラフの種類. Default to "bar".
-#        kind_grid (bool, optional): 表示するグリッドの種類("x" or "y"). Defaults to False.
-#        range5(int) :x軸を5刻みにするとき、表示する範囲. Default to None.
-#        rotate_xlim (int, optional): x軸ラベルの角度. Defaults to None.
-#        showbar_ (int, optional): グラフの拡大率. Defaults to 60.
-#        topLevel (bool, optional): ウィンドウを連動させるか. Defaults to False.
-#    """
-#    fig = Figure(figsize=(6,6))
-#    ax1 = fig.add_subplot(111)
-#    if topLevel:
-#        frame = tk.Toplevel()
-#    else:
-#        frame = tk.Tk()
-#    frame.title(title_)
-#    canvasFrame = tk.Frame(frame)
-#    canvasFrame.pack(side=tk.TOP)
-#
-#    controlFrame = tk.Frame(frame)
-#    controlFrame.pack(side=tk.BOTTOM)
-#
-#    canvas = FigureCanvasTkAgg(fig, canvasFrame)
-#
-#    tmp = canvas.get_tk_widget()
-#    tmp.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
-#    showbars=showbar_
-#    if graph_type == "bar":
-#        ax1.bar(list(data.keys()), list(data.values()))
-#    elif graph_type == "line":
-#        ax1.plot(list(data.keys()), list(data.values()))
-#    if not kind_grid == None:
-#        ax1.grid(axis = kind_grid, linestyle="--")
-#    if not range5 == None:
-#        xtick = [1]
-#        xtick.extend([i * 5 for i in range(1, ((range5 - 1)//5) + 1)])
-#        ax1.set_xticks(xtick)
-#    if not rotate_xlim == None:
-#        fig.autofmt_xdate(rotation = rotate_xlim)
-#
-#    def draw_plot(pos):
-#        pos_ = float(pos)
-#        ax1.set_xlim(pos_-1, pos_+showbars+1)
-#        canvas.draw()
-#    
-#    y_scale = ttk.Scale(controlFrame, from_=0.0, to=len(data)-showbars, length=480, orient=tk.HORIZONTAL, command=draw_plot)
-#    y_scale.pack(fill=tk.X)
-#    btn = tk.Button(controlFrame, text="閉じる", command = frame.destroy)
-#    btn.pack()
-#    draw_plot(0)
-
 
 # ファイル指定の関数
-def filedialog_clicked(entry):
+def _filedialog_clicked(entry):
     fTyp = [("", "*")]
     iFile = os.path.abspath(os.path.dirname(__file__))
     iFilePath = filedialog.askopenfilename(filetype = fTyp, initialdir = iFile)
     entry.set(iFilePath)
 
 # フォルダ指定の関数
-def dirdialog_clicked(entry):
+def _dirdialog_clicked(entry):
     iDir = os.path.abspath(os.path.dirname(__file__))
     iDirPath = filedialog.askdirectory(initialdir = iDir)
     entry.set(iDirPath)
+
+class TreeView():
+    
+    def __init__(self,frame: tk.Frame,side,header,widths,height,is_scroll,is_headings):
+        self.is_headings = is_headings
+        self.is_scroll = is_scroll
+        tree_frame = tk.Frame(frame)
+        
+        tree = ttk.Treeview(tree_frame)
+        if is_headings:
+            num_column = len(header)+1
+            tree["show"] = "headings"
+        else:
+            num_column = len(header)
+        tree["column"] = tuple([i for i in range(1,num_column)])
+        tree["height"] = height
+        
+        if is_headings:
+            for i in tree["column"]:
+                tree.column(int(i),width = widths[int(i)-1])
+            for i in range(1,num_column):
+                tree.heading(i,text=header[i-1])
+        else:
+            tree.column("#0",width=widths[0])
+            for i in tree["column"]:
+                tree.column(int(i),width=widths[int(i)])
+            tree.heading("#0",text=header[0])
+            for i in range(1,num_column):
+                tree.heading(i,text=header[i])
+        tree.pack()
+        self.tree_frame = tree_frame
+        self.tree = tree
+        print(tree["column"])
+    
+    def insert_data(self,datas,parent = None,is_open=False):
+        if parent == None:
+            p = ""
+        else:
+            p = parent
+        if self.is_headings:
+            iid = self.tree.insert(
+                p,
+                tk.END,
+                value=tuple(datas)
+            )
+        else:
+            iid = self.tree.insert(
+                p,
+                tk.END,
+                text = datas[0],
+                value=tuple(datas[1:]),
+                open=is_open
+            )
+        return iid
+    def plot(self,frame_side):
+        self.tree_frame.pack(side=frame_side)
+        if self.is_scroll:
+            self.tree.pack(side="left")
+            scroll = tk.Scrollbar(self.tree_frame,orient=tk.VERTICAL,command=self.tree.yview)
+            scroll.pack(side="left",fill="y")
+            self.tree["yscrollcommand"] = scroll.set
+        else:
+            self.tree.pack()
+            
